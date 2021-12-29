@@ -57,11 +57,33 @@ begin
         ... = c : by rw one_mul,
 end
 
+lemma prod_to_inv_r [G : Group A] (a b c : A): a * b = c ↔ a = c * b⁻¹ :=
+begin
+  split,
+  intro p,
+  calc a = a * one : by rw Group.mul_one
+        ... = a * (b * b⁻¹) : by rw ← Group.mul_inv
+        ... = (a * b) * b⁻¹: by rw Group.mul_assoc
+        ... = c * b⁻¹ : by rw p,
+  intro p,
+  calc (a * b) = c * b⁻¹ * b : by rw ←p
+        ... = c * (b⁻¹ * b) : by rw Group.mul_assoc
+        ... = c * one : by rw inv_mul
+        ... = c : by rw Group.mul_one,
+end
+
 -- Exercise 1.2.3
 example [G : Group A] (a b : A) : ∃ x, (a * x = b) :=
 begin 
   split,
   rw prod_to_inv,
+end
+
+-- Exercise 1.2.4
+example [G : Group A] (a b : A) : ∃ x, (x * a = b) :=
+begin 
+  split,
+  rw prod_to_inv_r,
 end
 
 -- Exercise 1.2.5
@@ -108,6 +130,5 @@ lemma inv_inv [G : Group A] (a : A) : (a⁻¹)⁻¹ = a :=
             ... = ((a⁻¹)⁻¹ * a⁻¹) * a : by simp [Group.mul_assoc]
             ... =  one * a : by rw inv_mul
             ... = a : by rw one_mul
-
 
 end definitions
