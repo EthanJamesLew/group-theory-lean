@@ -1,5 +1,9 @@
 /-
 WR Scott's Group Theory in Lean
+
+Preliminaries
+
+pp 1 - 5
 -/
 
 namespace introduction
@@ -173,6 +177,7 @@ class Function (A : Type) :=
 notation `fDom(`R`)` := domain R.relation
 notation `fRng(`R`)` := range R.relation
 
+-- ugh this is bad 
 definition Function.apply (R : Function A) (a : A) : A := sorry
   
 definition Function.equiv (A : Type) [f : Function A] [g : Function A] : Prop :=
