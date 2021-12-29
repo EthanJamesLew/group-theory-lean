@@ -18,8 +18,6 @@ class Group (A : Type) :=
   (one : A)
   (mul_one : ∀ a, mul a one = a) 
   (mul_inv : ∀ a, mul a (inv a) = one)
-  -- I should prove this...
-  (inv_inv : ∀ a, inv (inv a) = a)
 
 postfix ⁻¹ := Group.inv 
 infix * := Group.mul
@@ -34,15 +32,21 @@ calc  a⁻¹ * a = a⁻¹ * a * one : by rw Group.mul_one
           ... = a⁻¹ * a * (a⁻¹ * (a⁻¹)⁻¹) : by rw Group.mul_inv
           ... = a⁻¹ * (a * a⁻¹) * (a⁻¹)⁻¹ : by simp [←Group.mul_assoc]
           ... = a⁻¹ * one * (a⁻¹)⁻¹ : by rw Group.mul_inv
-          ... = ((a⁻¹) * one) * (a⁻¹)⁻¹ : by simp [Group.inv_inv]
-          ... = a⁻¹ * (a⁻¹)⁻¹: by rw Group.mul_one
-          ... = one : by rw ←Group.mul_inv
+          ... = ((a⁻¹) * (a⁻¹)⁻¹) : by simp [Group.mul_one]
+          ... = one : by rw Group.mul_inv
 
 -- Exercise 1.2.2
 lemma one_mul [G : Group A] (a : A): one * a = a :=
 calc  one * a = a * a⁻¹ * a : by rw  Group.mul_inv
           ... = a * one : by simp [Group.mul_assoc, inv_mul]
           ... = a : by simp [Group.mul_one]
+
+lemma inv_inv [G : Group A] (a : A) : (a⁻¹)⁻¹ = a :=
+  calc  (a⁻¹)⁻¹ = (a⁻¹)⁻¹ * one : by rw Group.mul_one
+            ... = (a⁻¹)⁻¹ * (a⁻¹ * a) : by rw inv_mul
+            ... = ((a⁻¹)⁻¹ * a⁻¹) * a : by simp [Group.mul_assoc]
+            ... =  one * a : by rw inv_mul
+            ... = a : by rw one_mul
 
 -- this is essentially the proof strategy for Exercise 1.2.3
 lemma prod_to_inv [G : Group A] (a b c : A): a * b = c ↔ b = a⁻¹ * c :=
