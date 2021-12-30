@@ -131,4 +131,25 @@ lemma inv_inv [G : Group A] (a : A) : (a⁻¹)⁻¹ = a :=
             ... =  one * a : by rw inv_mul
             ... = a : by rw one_mul
 
+-- Exercise 1.2.9
+constant pow : ℕ → ℕ → ℕ
+infix ^ := pow
+axiom pow_zero (a : ℕ) : a ^ 0 = 1
+axiom pow_succ (a b : ℕ) : a ^ (b.succ) = a ^ b * a
+lemma one_add (a b : ℕ) : 1 + a = a.succ := by rw nat.add_comm
+lemma succ_group (a b : ℕ) : (a + b).succ = a.succ + b := by admit
+example (a b : ℕ) (r s : ℕ) : a^r * a^s = a^(r + s) :=
+begin
+  induction r with rh r,
+  induction s with sh s,
+  rw [nat.zero_add, pow_zero, nat.mul_one],
+  rw [nat.zero_add, pow_zero, nat.one_mul],
+  calc a^rh.succ * a^s = a^rh * (a * a^s) : by rw [pow_succ, nat.mul_assoc]
+                  ... = a * (a^s * a^rh) : by rw [nat.mul_comm, nat.mul_assoc]
+                  ... = a * (a^rh * a^s) : by simp [nat.mul_comm]
+                  ... = a * a^(rh + s): by rw r
+                  ... = a^(rh + s) * a: by rw nat.mul_comm
+                  ... = a^((rh + s).succ) : by rw ←pow_succ
+                  ... = a^(rh.succ + s) : by rw succ_group,
+end
 end definitions
